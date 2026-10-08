@@ -1,0 +1,303 @@
+```html
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Meine AI</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #0f1115;
+            color: white;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .app {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            height: 65px;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            border-bottom: 1px solid #292d35;
+            background: #151820;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .status {
+            margin-left: 15px;
+            color: #7ee787;
+            font-size: 13px;
+        }
+
+        .chat {
+            flex: 1;
+            overflow-y: auto;
+            padding: 25px;
+        }
+
+        .message {
+            max-width: 800px;
+            margin: 0 auto 20px auto;
+            display: flex;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .bubble {
+            padding: 13px 17px;
+            border-radius: 16px;
+            max-width: 75%;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .ai .bubble {
+            background: #20242d;
+        }
+
+        .user .bubble {
+            background: #315efb;
+        }
+
+        .input-area {
+            padding: 15px;
+            border-top: 1px solid #292d35;
+            background: #151820;
+        }
+
+        .input-box {
+            max-width: 850px;
+            margin: auto;
+            display: flex;
+            gap: 10px;
+        }
+
+        textarea {
+            flex: 1;
+            resize: none;
+            height: 50px;
+            border: 1px solid #353b46;
+            border-radius: 14px;
+            background: #20242d;
+            color: white;
+            padding: 14px;
+            outline: none;
+            font-family: inherit;
+            font-size: 15px;
+        }
+
+        textarea:focus {
+            border-color: #4d6fff;
+        }
+
+        button {
+            width: 55px;
+            border: none;
+            border-radius: 14px;
+            background: #315efb;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #416cff;
+        }
+
+        .welcome {
+            text-align: center;
+            margin-top: 25vh;
+            color: #aeb4c0;
+        }
+
+        .welcome h1 {
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 600px) {
+            .chat {
+                padding: 15px;
+            }
+
+            .bubble {
+                max-width: 90%;
+            }
+
+            .input-area {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <header>
+        <div class="logo">Meine AI</div>
+        <div class="status">● Online</div>
+    </header>
+
+    <main class="chat" id="chat">
+
+        <div class="welcome" id="welcome">
+            <h1>Meine AI</h1>
+            <p>Deine eigene künstliche Intelligenz</p>
+        </div>
+
+    </main>
+
+    <div class="input-area">
+
+        <div class="input-box">
+
+            <textarea
+                id="input"
+                placeholder="Schreibe eine Nachricht..."
+                rows="1"
+            ></textarea>
+
+            <button id="send">➤</button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+const input = document.getElementById("input");
+const send = document.getElementById("send");
+const chat = document.getElementById("chat");
+const welcome = document.getElementById("welcome");
+
+
+function addMessage(text, type) {
+
+    if (welcome) {
+        welcome.remove();
+    }
+
+    const message = document.createElement("div");
+
+    message.className = "message " + type;
+
+    const bubble = document.createElement("div");
+
+    bubble.className = "bubble";
+
+    bubble.textContent = text;
+
+    message.appendChild(bubble);
+
+    chat.appendChild(message);
+
+    chat.scrollTop = chat.scrollHeight;
+}
+
+
+function generateAnswer(text) {
+
+    const lower = text.toLowerCase();
+
+    if (lower.includes("hallo") ||
+        lower.includes("hi") ||
+        lower.includes("hey")) {
+
+        return "Hallo! Ich bin deine eigene AI.";
+    }
+
+    if (lower.includes("wie geht")) {
+
+        return "Mir geht es gut! Ich bin bereit.";
+    }
+
+    if (lower.includes("wer bist du")) {
+
+        return "Ich bin deine eigene künstliche Intelligenz.";
+    }
+
+    if (lower.includes("was kannst du")) {
+
+        return "Ich kann mit dir chatten. Mein neuronales Modell wird später direkt mit dieser Oberfläche verbunden.";
+    }
+
+    return "Ich habe deine Nachricht erhalten: " + text;
+}
+
+
+function sendMessage() {
+
+    const text = input.value.trim();
+
+    if (!text) {
+        return;
+    }
+
+    addMessage(text, "user");
+
+    input.value = "";
+
+    setTimeout(() => {
+
+        const answer = generateAnswer(text);
+
+        addMessage(answer, "ai");
+
+    }, 300);
+}
+
+
+send.addEventListener(
+    "click",
+    sendMessage
+);
+
+
+input.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (
+            event.key === "Enter" &&
+            !event.shiftKey
+        ) {
+
+            event.preventDefault();
+
+            sendMessage();
+        }
+
+    }
+);
+
+</script>
+
+</body>
+</html>
+```
